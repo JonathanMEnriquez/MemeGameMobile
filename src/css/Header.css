@@ -1,0 +1,15 @@
+header {
+    text-align: left;
+}
+
+header img {
+    width: 40vw;
+    background-color: white;
+    padding: 4px 8px 8px;
+}
+
+@media screen and (orientation: landscape) {
+    header img {
+        width: 20%;
+    }
+}

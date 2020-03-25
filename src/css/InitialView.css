@@ -1,0 +1,75 @@
+.initial {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    top: 0;
+    left: 0;
+    text-align: center;
+}
+
+.initial .sign-up {
+    height: 55%;
+    padding-top: 10vh;
+}
+
+.initial .sign-up label {
+    font-size: 18px;
+}
+
+.initial .sign-up input {
+    width: calc(80% - 16px);
+    height: 48px;
+    font-size: 24px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid white;
+    display: block;
+    margin: auto;
+    margin-bottom: 4vh;
+    text-align: center;
+}
+
+.initial .sign-up button {
+    width: 80%;
+    /* accounts for padidng on the inputs */
+    height: calc(48px + 16px);
+    background: rgb(59, 199, 218);
+    color: black;
+    font-size: 40px;
+    margin-top: 1vh;
+}
+
+.initial .message {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    height: 18px;
+    padding-top: 8px;
+    background-color: transparent;
+}
+
+@media screen and (orientation: landscape) {
+    .initial .sign-up {
+        padding-top: 2vh;
+    }
+
+    .initial .sign-up input {
+        width: calc(60% - 16px);
+        height: 40px;
+    }
+
+    .initial .sign-up button {
+        width: 60%;
+        font-size: 32px;
+        height: calc(40px + 16px);
+    }
+
+    .initial .message {
+        font-size: 18px;
+        height: 16px;
+        width: 60%;
+        position: absolute;
+        top: 10%;
+        left: 20%;
+        text-align: center;
+    }
+}
