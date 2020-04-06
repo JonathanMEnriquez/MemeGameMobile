@@ -24,6 +24,8 @@ const GameSwitch = (props) => {
                 return <InitialView socket={socket}
                         setGameMode={setMode}
                         gameModes={gameModes} />
+            case gameModes.judge:
+                return <div></div>
             default:
                 return (
                     <div style={{width: '100vw', height: '100vh', display: 'flex', 

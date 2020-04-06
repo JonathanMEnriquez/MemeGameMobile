@@ -16,6 +16,9 @@ function SocketConnection(methods) {
     });
     self.socket.on(Constants.SOCKET_SEND_HAND, (data) => {
         console.log('got a hand! ', data.hand.length);
+        if (self.callbacks[Constants.SOCKET_SEND_HAND]) {
+            self.callbacks[Constants.SOCKET_SEND_HAND](data.hand);
+        }
         self.socket.emit(Constants.SOCKET_SEND_HAND_CONFIRM);
     });
 
