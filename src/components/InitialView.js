@@ -6,14 +6,12 @@ import Constants from '../utils/Constants';
 import Player from '../classes/Player';
 
 const InitialView = (props) => {
-    const { setGameMode, gameModes, socket } = props;
+    const { setGameMode, gameModes, socket, setSelf } = props;
     const [message, setMessage] = useState();
     const [messageHasError, setMessageHasError] = useState(false);
-    const [self, setSelf] = useState();
+    const [signedUp, setSignedUp] = useState(false);
     const [code, setCode] = useState('');
     const [name, setName] = useState('');
-
-    console.log(socket);
 
     const submit = async() => {
         setMessage();
@@ -23,6 +21,7 @@ const InitialView = (props) => {
         setMessage("Connecting...");
         try {
             const res = await socket.addSelfToGame(code, name);
+            setSignedUp(true);
             setMessage('Connected. \nWaiting for other players.');
             setSelf(new Player(res.id, res.name));
         } catch(err) {
@@ -41,7 +40,7 @@ const InitialView = (props) => {
         <div className="initial">
             <Header />
             <Message text={message} isError={messageHasError} />
-            {!self &&
+            {!signedUp &&
             <div className="sign-up">
                 <label htmlFor="code">Game Code</label>
                 <input id="code"

@@ -7,4 +7,6 @@ module.exports = {
     SOCKET_SEND_HAND: 'send_full_hand',
     SOCKET_SEND_HAND_ERROR: 'failed_sending_full_hand',
     SOCKET_SEND_HAND_CONFIRM: 'send_full_hand_confirm_received',
+    SOCKET_START_ROUND_AS_PLAYER: 'start_new_round_as_player',
+    SOCKET_START_ROUND_AS_JUDGE: 'start_new_round_as_judge',
 }

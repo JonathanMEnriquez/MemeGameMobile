@@ -21,6 +21,18 @@ function SocketConnection(methods) {
         }
         self.socket.emit(Constants.SOCKET_SEND_HAND_CONFIRM);
     });
+    self.socket.on(Constants.SOCKET_START_ROUND_AS_JUDGE, (data) => {
+        console.log('woooooo! I\'m the judge! ', data);
+        if (self.callbacks[Constants.SOCKET_START_ROUND_AS_JUDGE]) {
+            self.callbacks[Constants.SOCKET_START_ROUND_AS_JUDGE](data.round);
+        }
+    });
+    self.socket.on(Constants.SOCKET_START_ROUND_AS_PLAYER, (data) => {
+        console.log('woooooo! I\'m a player next round! ', data);
+        if (self.callbacks[Constants.SOCKET_START_ROUND_AS_PLAYER]) {
+            self.callbacks[Constants.SOCKET_START_ROUND_AS_PLAYER](data.round);
+        }
+    });
 
     self.addCallback = (signalName, callback) => {
         if (!self.callbacks[signalName]) {
