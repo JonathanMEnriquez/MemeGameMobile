@@ -16,16 +16,40 @@ const GameSwitch = (props) => {
     const [hand, setHand] = useState([]);
     const [round, setRound] = useState();
     const [playerSelf, setSelf] = useState();
+    const [judgeReady, setJudgeReady] = useState(false);
     const socketCallbacks = {};
     socketCallbacks[Constants.SOCKET_SEND_ID] = () => setMode(gameModes.initial);
     socketCallbacks[Constants.SOCKET_SEND_HAND] = (hand) => setHand(hand);
     socketCallbacks[Constants.SOCKET_START_ROUND_AS_JUDGE] = (round) => startRound(true, round);
     socketCallbacks[Constants.SOCKET_START_ROUND_AS_PLAYER] = (round) => startRound(false, round);
+    socketCallbacks[Constants.SOCKET_SEND_CARD] = (card) => addCardToHand(card);
+    socketCallbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE] = () => receivedJudgePromptToContinue();
 
     const startRound = (isJudge, round) => {
+        setJudgeReady(false);
         setRound(round);
         setMode(isJudge ? gameModes.judge : gameModes.player);
     };
+
+    const removeCardFromHand = (cardId) => {
+        const filtered = hand.filter(card => card.id !== cardId);
+        setHand(filtered);
+    };
+
+    const receivedJudgePromptToContinue = () => {
+        console.log(mode, gameModes.judge);
+        console.log('about to set judge to ready');
+        setJudgeReady(true);
+    }
+
+    const addCardToHand = (card) => {
+        const dupe = [...hand, card];
+        setHand(dupe);
+    }
+
+    const judgeReadyToProceed = () => {
+        socket.confirmReadyToJudge(playerSelf.name);
+    }
 
     useEffect(() => setSocket(new SocketConnection(socketCallbacks)), []);
 
@@ -37,11 +61,14 @@ const GameSwitch = (props) => {
                         gameModes={gameModes}
                         setSelf={setSelf} />
             case gameModes.judge:
-                return <JudgeView />
+                return <JudgeView showButton={judgeReady}
+                        confirm={judgeReadyToProceed} />
             case gameModes.player:
                 return <PlayerView hand={hand} 
                         playerSelf={playerSelf} 
-                        round={round} />
+                        round={round}
+                        socket={socket}
+                        removeCardFromHand={removeCardFromHand} />
             default:
                 return (
                     <div style={{width: '100vw', height: '100vh', display: 'flex', 

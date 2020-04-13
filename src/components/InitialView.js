@@ -2,22 +2,23 @@ import React, {useState} from 'react';
 import '../css/InitialView.css';
 import Header from '../reusable/Header';
 import Message from '../reusable/Message';
-import Constants from '../utils/Constants';
 import Player from '../classes/Player';
 
 const InitialView = (props) => {
-    const { setGameMode, gameModes, socket, setSelf } = props;
+    const { socket, setSelf } = props;
     const [message, setMessage] = useState();
     const [messageHasError, setMessageHasError] = useState(false);
     const [signedUp, setSignedUp] = useState(false);
     const [code, setCode] = useState('');
     const [name, setName] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
     const submit = async() => {
         setMessage();
-        if (!code || !name) {
+        if (!code || !name || submitting) {
             return;
         }
+        setSubmitting(true);
         setMessage("Connecting...");
         try {
             const res = await socket.addSelfToGame(code, name);
@@ -27,6 +28,7 @@ const InitialView = (props) => {
         } catch(err) {
             setMessageHasError(true);
             setMessage(err);
+            setSubmitting(false);
         }
     }
 

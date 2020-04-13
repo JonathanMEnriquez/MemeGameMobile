@@ -23,7 +23,6 @@ const CardSlider = (props) => {
     }
 
     const clickHandler = () => {
-        console.log('are you sure?', selectCard);
         selectCard(card);
     }
 
