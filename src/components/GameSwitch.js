@@ -37,7 +37,7 @@ const GameSwitch = (props) => {
     };
 
     const receivedJudgePromptToContinue = () => {
-        console.log(mode, gameModes.judge);
+        console.log(this, mode, gameModes.judge);
         console.log('about to set judge to ready');
         setJudgeReady(true);
     }
