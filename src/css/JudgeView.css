@@ -52,3 +52,9 @@
     margin: auto;
     margin-top: 1vh;
 }
+
+.judge-view .message {
+    font-size: 5vw;
+    padding: 4vh 1vw;
+    text-align: center;
+}

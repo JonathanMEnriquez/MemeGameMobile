@@ -43,7 +43,7 @@ const JudgeView = (props) => {
                         </div>
                     </div>
                 )
-            case judgeModes.me:
+            case judgeModes.message:
                 return (
                     <div className="judge-view">
                         <Message text={message} />
@@ -51,7 +51,7 @@ const JudgeView = (props) => {
                 )
             case judgeModes.select:
                 return (
-                    <div>SELECT MODE</div>
+                    <div>SELECT TIME!</div>
                 )
             default:
                 return <div>should not happen</div>
@@ -68,7 +68,7 @@ const JudgeView = (props) => {
             confirm();
             setMessage('The submissions will be played on the main screen.');
             setMode(judgeModes.message);
-            setTimeout(() => setMode(judgeModes.select), 5000);
+            setTimeout(() => setMessage('You will be able to make your choice shortly.'), 5000);
         }
     }
 

@@ -4,12 +4,14 @@ import SocketConnection from './Socket';
 import Constants from '../utils/Constants';
 import JudgeView from './JudgeView';
 import PlayerView from './PlayerView';
+import Select from './Select';
 
 const GameSwitch = (props) => {
     const gameModes = {
         initial: 'in',
         judge: 'ju',
-        player: 'pl'
+        player: 'pl',
+        select: 'se',
     }
     const [mode, setMode] = useState();
     const [socket, setSocket] = useState();
@@ -17,6 +19,8 @@ const GameSwitch = (props) => {
     const [round, setRound] = useState();
     const [playerSelf, setSelf] = useState();
     const [judgeReady, setJudgeReady] = useState(false);
+    const [isJudge, setIsJudge] = useState();
+    const [choices, setChoices] = useState();
     const socketCallbacks = {};
     socketCallbacks[Constants.SOCKET_SEND_ID] = () => setMode(gameModes.initial);
     socketCallbacks[Constants.SOCKET_SEND_HAND] = (hand) => setHand(hand);
@@ -24,11 +28,18 @@ const GameSwitch = (props) => {
     socketCallbacks[Constants.SOCKET_START_ROUND_AS_PLAYER] = (round) => startRound(false, round);
     socketCallbacks[Constants.SOCKET_SEND_CARD] = (card) => addCardToHand(card);
     socketCallbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE] = () => receivedJudgePromptToContinue();
+    socketCallbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS] = (choices) => startSelection(choices);
 
     const startRound = (isJudge, round) => {
+        setIsJudge(isJudge);
         setJudgeReady(false);
         setRound(round);
         setMode(isJudge ? gameModes.judge : gameModes.player);
+    };
+
+    const startSelection = (choices) => {
+        setChoices(choices);
+        setMode(gameModes.select);
     };
 
     const removeCardFromHand = (cardId) => {
@@ -69,6 +80,10 @@ const GameSwitch = (props) => {
                         round={round}
                         socket={socket}
                         removeCardFromHand={removeCardFromHand} />
+            case gameModes.select:
+                return <Select isJudge={isJudge} 
+                        choices={choices}
+                        playerSelf={playerSelf} />
             default:
                 return (
                     <div style={{width: '100vw', height: '100vh', display: 'flex', 

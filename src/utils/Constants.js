@@ -14,4 +14,5 @@ module.exports = {
     SOCKET_SEND_CARD_CONFIRM: 'send_new_card_confirm_received',
     SOCKET_SEND_JUDGE_CAN_CONTINUE: 'all_entries_submitted_can_continue',
     SOCKET_RECEIVE_JUDGE_PERMISSION_TO_CONTINUE: 'judge_says_can_continue',
+    SOCKET_SEND_OPTIONS_TO_PLAYERS: 'send_options_for_vote',
 }

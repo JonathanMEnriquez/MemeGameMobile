@@ -48,6 +48,12 @@ function SocketConnection(methods) {
             self.callbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE]();
         }
     });
+    self.socket.on(Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS, data => {
+        console.debug(`socket received \'${Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS}\' signal. `, data);
+        if (self.callbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS]) {
+            self.callbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS](data.choices);
+        }
+    });
 
     self.addCallback = (signalName, callback) => {
         if (!self.callbacks[signalName]) {
