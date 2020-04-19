@@ -15,4 +15,6 @@ module.exports = {
     SOCKET_SEND_JUDGE_CAN_CONTINUE: 'all_entries_submitted_can_continue',
     SOCKET_RECEIVE_JUDGE_PERMISSION_TO_CONTINUE: 'judge_says_can_continue',
     SOCKET_SEND_OPTIONS_TO_PLAYERS: 'send_options_for_vote',
+    SOCKET_SEND_ROUND_SELECTION: 'send_round_selection',
+    SOCKET_SEND_WINNER_INFO: 'send_winner_info',
 }

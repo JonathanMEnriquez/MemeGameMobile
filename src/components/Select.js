@@ -2,19 +2,26 @@ import React, {useState} from 'react';
 import '../css/Select.css';
 
 const Select = (props) => {
-    const { isJudge, choices, playerSelf } = props;
-    const [selected, setSelected] = useState();
+    const { isJudge, choices, playerSelf, submitRoundSelection, switchToWinnerMode } = props;
+    const [selected, setSelected] = useState(null);
     // removes self from choices
     const cleansedChoices = isJudge ? choices 
         : choices.filter(c => c.name !== playerSelf.name );
-    const message = isJudge ? 'Who is winning this round, Judge?' : 'Which was your favorite?';
+    const message = isJudge ? 
+        'Who is winning this round, Judge?' 
+        : 'Which was your favorite?';
 
-    const submitChoice = (target) => {
-        console.log('submitting choice: ', selected);
+    const submitChoice = () => {
+        if (selected !== null) {
+            console.debug('Submitting choice: ', selected, submitRoundSelection);
+            submitRoundSelection(selected);
+            switchToWinnerMode();
+            setSelected(null);
+        }
     };
 
-    const changeHandler = (e) => {
-        setSelected(e.target.value);
+    const changeHandler = (choice) => {
+        setSelected(choice);
     };
 
     return (
@@ -25,20 +32,17 @@ const Select = (props) => {
             <div className="choices">
                 {cleansedChoices.map((choice, key) => {
                     return (
-                        <div className="radio" key={key}>
-                            <input type="radio"
-                                    name="round-winner"
-                                    value={choice.number}
-                                    checked={selected === choice.number}
-                                    onChange={changeHandler}
-                                    id={`CHOICE-${choice.number}`} />
-                            <label htmlFor={`CHOICE-${choice.number}`} >{`Option ${choice.number}`}</label>
+                        <div key={key}
+                            onClick={() => changeHandler(choice.number)}
+                            className={selected === choice.number ? 'selected option' : 'option'} >
+                            {selected === choice.number ? `Selected #${choice.number}` : `Option #${choice.number}`}
                         </div>
                     )
                 })}
             </div>
             <div className="submit-div">
-                <button onClick={submitChoice}>
+                <button className={selected !== null ? '' : 'hidden'}
+                    onClick={submitChoice}>
                     Submit
                 </button>
             </div>

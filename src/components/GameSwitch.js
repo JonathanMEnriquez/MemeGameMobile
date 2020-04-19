@@ -5,6 +5,7 @@ import Constants from '../utils/Constants';
 import JudgeView from './JudgeView';
 import PlayerView from './PlayerView';
 import Select from './Select';
+import WinnerView from './WinnerView';
 
 const GameSwitch = (props) => {
     const gameModes = {
@@ -12,6 +13,7 @@ const GameSwitch = (props) => {
         judge: 'ju',
         player: 'pl',
         select: 'se',
+        winner: 'wi',
     }
     const [mode, setMode] = useState();
     const [socket, setSocket] = useState();
@@ -21,6 +23,7 @@ const GameSwitch = (props) => {
     const [judgeReady, setJudgeReady] = useState(false);
     const [isJudge, setIsJudge] = useState();
     const [choices, setChoices] = useState();
+    const [winners, setWinners] = useState();
     const socketCallbacks = {};
     socketCallbacks[Constants.SOCKET_SEND_ID] = () => setMode(gameModes.initial);
     socketCallbacks[Constants.SOCKET_SEND_HAND] = (hand) => setHand(hand);
@@ -29,6 +32,11 @@ const GameSwitch = (props) => {
     socketCallbacks[Constants.SOCKET_SEND_CARD] = (card) => addCardToHand(card);
     socketCallbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE] = () => receivedJudgePromptToContinue();
     socketCallbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS] = (choices) => startSelection(choices);
+    socketCallbacks[Constants.SOCKET_SEND_WINNER_INFO] = (winnerInfo) => setWinnerInfo(winnerInfo);
+
+    const setWinnerInfo = (winners) => {
+        setWinners(winners);
+    }
 
     const startRound = (isJudge, round) => {
         setIsJudge(isJudge);
@@ -48,8 +56,6 @@ const GameSwitch = (props) => {
     };
 
     const receivedJudgePromptToContinue = () => {
-        console.log(this, mode, gameModes.judge);
-        console.log('about to set judge to ready');
         setJudgeReady(true);
     }
 
@@ -60,6 +66,11 @@ const GameSwitch = (props) => {
 
     const judgeReadyToProceed = () => {
         socket.confirmReadyToJudge(playerSelf.name);
+    }
+
+    const submitRoundSelection = (choice) => {
+        console.log('Gameswitch SubmitRoundSelection method called with data: ' + choice);
+        socket.submitRoundSelection(choice, isJudge, playerSelf.name, round);
     }
 
     useEffect(() => setSocket(new SocketConnection(socketCallbacks)), []);
@@ -83,6 +94,11 @@ const GameSwitch = (props) => {
             case gameModes.select:
                 return <Select isJudge={isJudge} 
                         choices={choices}
+                        playerSelf={playerSelf}
+                        submitRoundSelection={submitRoundSelection}
+                        switchToWinnerMode={() => setMode(gameModes.winner)} />
+            case gameModes.winner:
+                return <WinnerView winners={winners}
                         playerSelf={playerSelf} />
             default:
                 return (

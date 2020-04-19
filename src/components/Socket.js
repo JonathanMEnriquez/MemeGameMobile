@@ -6,7 +6,7 @@ function SocketConnection(methods) {
     let self = this;
     self.id = '';
     self.callbacks = methods;
-    self.socket = OpenSocket('http://localhost:6969');
+    self.socket = OpenSocket('http://192.168.1.31:6969');
 
     self.socket.emit(Constants.SOCKET_NEW_CONNECTION);
     self.socket.on(Constants.SOCKET_SEND_ID, function(data) {
@@ -43,15 +43,21 @@ function SocketConnection(methods) {
         }
     });
     self.socket.on(Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE, () => {
-        console.debug(`socket received \'${Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE}\' signal.`);
+        console.debug(`Socket received \'${Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE}\' signal.`);
         if (self.callbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE]) {
             self.callbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE]();
         }
     });
     self.socket.on(Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS, data => {
-        console.debug(`socket received \'${Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS}\' signal. `, data);
+        console.debug(`Socket received \'${Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS}\' signal. `, data);
         if (self.callbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS]) {
             self.callbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS](data.choices);
+        }
+    });
+    self.socket.on(Constants.SOCKET_SEND_WINNER_INFO, data => {
+        console.debug(`Socket received \'${Constants.SOCKET_SEND_WINNER_INFO}\' signal. `, data);
+        if (self.callbacks[Constants.SOCKET_SEND_WINNER_INFO]) {
+            self.callbacks[Constants.SOCKET_SEND_WINNER_INFO](data);
         }
     });
 
@@ -76,6 +82,11 @@ function SocketConnection(methods) {
             });
         });
     };
+
+    self.submitRoundSelection = (choice, isJudge, name, round) => {
+        console.debug(`Socket emitting ${Constants.SOCKET_SEND_ROUND_SELECTION} from ${name} selecting option-${choice} during round ${round}`);
+        self.socket.emit(Constants.SOCKET_SEND_ROUND_SELECTION, {isJudge: isJudge, name: name, choice: choice, round: round});
+    }
 
     self.submitChoice = (name, cardId, round) => {
         console.debug(`Socket emitting ${Constants.SOCKET_SEND_ROUND_SUBMISSION} from ${name} about ${cardId} during round ${round}`);
