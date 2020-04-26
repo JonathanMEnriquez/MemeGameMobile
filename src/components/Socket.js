@@ -6,16 +6,16 @@ function SocketConnection(methods) {
     let self = this;
     self.id = '';
     self.callbacks = methods;
-    self.socket = OpenSocket('http://192.168.1.31:6969');
+    self.socket = OpenSocket('http://localhost:6969');
 
     self.socket.emit(Constants.SOCKET_NEW_CONNECTION);
     self.socket.on(Constants.SOCKET_SEND_ID, function(data) {
-        console.log('SOCKET_SEND_ID ', data, self.callbacks);
+        console.debug('SOCKET_SEND_ID ', data, self.callbacks);
         self.id = data.id;
         self.callbacks[Constants.SOCKET_SEND_ID]();
     });
     self.socket.on(Constants.SOCKET_SEND_HAND, (data) => {
-        console.log('got a hand! ', data.hand.length);
+        console.debug(`Socket received ${Constants.SOCKET_SEND_HAND} with `, data.hand);
         if (self.callbacks[Constants.SOCKET_SEND_HAND]) {
             self.callbacks[Constants.SOCKET_SEND_HAND](data.hand);
         }

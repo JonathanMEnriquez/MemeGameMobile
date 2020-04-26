@@ -6,24 +6,33 @@ import SmallSlider from '../reusable/SmallSlider';
 import Message from '../reusable/Message';
 
 const PlayerView = (props) => {
+    const MAX_CHARS = 25;
     const { hand, playerSelf, round, socket, removeCardFromHand } = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedCard, setSelectedCard] = useState();
     const [submitted, setSubmitted] = useState(false);
     const [message, setMessage] = useState('');
 
+    const safeAlt = (alt) => {
+        if (alt.length > MAX_CHARS) {
+            return alt.slice(0, MAX_CHARS - 3) + '...';
+        }
+
+        return alt;
+    };
+
     const submitChoice = (card) => {
         socket.submitChoice(playerSelf.name, card.id, round);
         removeCardFromHand(card.id);
         setMessage('Submitted your answer. Waiting for other players to make their choices. Good luck!');
         setSubmitted(true);
-    }
+    };
 
     const confirmModalContent = () => {
         return (
             <div className="modal-content-info">
                 <p>You'd like to submit 
-                    <span>{selectedCard && selectedCard.alt}</span>
+                    <span>{selectedCard && safeAlt(selectedCard.alt)}</span>
                     this round?</p>
                 <div>
                     <button onClick={() => submitChoice(selectedCard)}>
@@ -40,7 +49,7 @@ const PlayerView = (props) => {
     const selectCard = (card) => {
         setSelectedCard(card);
         setModalVisible(true);
-    }
+    };
 
     return (
         <div className="player-view-content">

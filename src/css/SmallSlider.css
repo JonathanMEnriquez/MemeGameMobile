@@ -10,7 +10,7 @@
 .small-slider .single-card {
     height: 30vw;
     width: 30vw;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position-x: center;
     background-position-y: center;

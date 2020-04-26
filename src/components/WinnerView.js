@@ -15,8 +15,6 @@ const WinnerView = (props) => {
     const isJudgeChoice = judgeChoice === playerSelf.name;
     const isPeoplesChoice = playersChoice === playerSelf.name;
 
-    console.log('is or not? ', isJudgeChoice, isPeoplesChoice);
-
     const generateMessage = () => {
         if (!winners) {
             return 'Thanks for voting. Waiting for everyone\'s choices to be submitted.'

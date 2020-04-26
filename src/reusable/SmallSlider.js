@@ -46,7 +46,7 @@ const SmallSlider = (props) => {
                 return (
                     <div className="single-card"
                         key={key}
-                        style={{backgroundImage: `url(${card.data})`}}
+                        style={{backgroundImage: `url(${card.dataMinified || card.data})`}}
                         onClick={() => clickHandler(card)} >
                     </div>
                 )

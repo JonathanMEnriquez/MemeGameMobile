@@ -1,4 +1,6 @@
 .winner-view {
-    width: 100vw;
-    height: 100vh;
+    width: 90vw;
+    height: 90vh;
+    padding: 5vh 5vw;
+    font-size: 6vw;
 }
