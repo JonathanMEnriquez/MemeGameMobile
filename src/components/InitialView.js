@@ -3,6 +3,7 @@ import '../css/InitialView.css';
 import Header from '../reusable/Header';
 import Message from '../reusable/Message';
 import Player from '../classes/Player';
+import Button from '../reusable/Button';
 
 const InitialView = (props) => {
     const { socket, setSelf } = props;
@@ -54,7 +55,8 @@ const InitialView = (props) => {
                     value={name}
                     onChange={(e) => nameChangeHandler(e.target.value)}
                     name="name" />
-                <button onClick={submit}>Join</button>
+                <Button clickHandler={submit}
+                    text="Join" />
             </div>
             }
         </div>

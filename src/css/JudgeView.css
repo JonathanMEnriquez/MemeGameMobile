@@ -38,23 +38,10 @@
 .judge-view .button-div {
     width: 100%;
     height: 20%;
-    
-}
-
-.judge-view .button-div button {
-    width: 80%;
-    /* accounts for padidng on the inputs */
-    height: calc(48px + 16px);
-    background: rgb(59, 199, 218);
-    color: black;
-    font-size: 6vw;
-    display: block;
-    margin: auto;
-    margin-top: 1vh;
 }
 
 .judge-view .message {
     font-size: 5vw;
-    padding: 4vh 1vw;
+    padding: 4vh 2vw;
     text-align: center;
 }

@@ -43,21 +43,27 @@ function SocketConnection(methods) {
         }
     });
     self.socket.on(Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE, () => {
-        console.debug(`Socket received \'${Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE}\' signal.`);
+        console.debug(`Socket received ${Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE} signal.`);
         if (self.callbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE]) {
             self.callbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE]();
         }
     });
     self.socket.on(Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS, data => {
-        console.debug(`Socket received \'${Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS}\' signal. `, data);
+        console.debug(`Socket received ${Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS} signal. `, data);
         if (self.callbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS]) {
             self.callbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS](data.choices);
         }
     });
     self.socket.on(Constants.SOCKET_SEND_WINNER_INFO, data => {
-        console.debug(`Socket received \'${Constants.SOCKET_SEND_WINNER_INFO}\' signal. `, data);
+        console.debug(`Socket received ${Constants.SOCKET_SEND_WINNER_INFO} signal. `, data);
         if (self.callbacks[Constants.SOCKET_SEND_WINNER_INFO]) {
             self.callbacks[Constants.SOCKET_SEND_WINNER_INFO](data);
+        }
+    });
+    self.socket.on(Constants.SOCKET_SEND_START_ROUND_OPTION, () => {
+        console.debug(`Socket received ${Constants.SOCKET_SEND_START_ROUND_OPTION} signal.`);
+        if (self.callbacks[Constants.SOCKET_SEND_START_ROUND_OPTION]) {
+            self.callbacks[Constants.SOCKET_SEND_START_ROUND_OPTION]();
         }
     });
 
@@ -96,6 +102,11 @@ function SocketConnection(methods) {
     self.confirmReadyToJudge = (name) => {
         console.debug(`Socket emitting ${Constants.SOCKET_RECEIVE_JUDGE_PERMISSION_TO_CONTINUE} with name: ${name}`);
         self.socket.emit(Constants.SOCKET_RECEIVE_JUDGE_PERMISSION_TO_CONTINUE, { name: name });
+    }
+
+    self.startNextRoundSignal = (name) => {
+        console.debug(`Socket emitting ${Constants.SOCKET_RECEIVED_JUDGE_NEW_ROUND_START} with name ${name}`);
+        self.socket.emit(Constants.SOCKET_RECEIVED_JUDGE_NEW_ROUND_START, { name: name });
     }
 }
 

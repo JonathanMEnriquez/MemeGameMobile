@@ -4,3 +4,8 @@
     padding: 5vh 5vw;
     font-size: 6vw;
 }
+
+.winner-view .button-div {
+    width: 100%;
+    padding-top: 20%;
+}

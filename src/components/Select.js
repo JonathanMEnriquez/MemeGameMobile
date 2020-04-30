@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import '../css/Select.css';
+import Button from '../reusable/Button';
 
 const Select = (props) => {
     const { isJudge, choices, playerSelf, submitRoundSelection, switchToWinnerMode } = props;
@@ -40,11 +41,9 @@ const Select = (props) => {
                     )
                 })}
             </div>
-            <div className="submit-div">
-                <button className={selected !== null ? '' : 'hidden'}
-                    onClick={submitChoice}>
-                    Submit
-                </button>
+            <div className={selected !== null ? 'submit-div' : 'hidden'}>
+                <Button clickHandler={submitChoice}
+                        text="Submit" />
             </div>
         </div>
     )

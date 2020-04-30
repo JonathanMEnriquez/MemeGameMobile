@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import '../css/JudgeView.css';
 import Gavel from '../img/conangavel.gif';
 import Message from '../reusable/Message';
+import Button from '../reusable/Button';
 
 const JudgeView = (props) => {
     const { showButton, confirm } = props;
@@ -36,9 +37,8 @@ const JudgeView = (props) => {
                         </div>
                         <div className="button-div">
                             {showButton &&
-                                <button onClick={clickHandler}>
-                                    Ready to Bang the Gavel?
-                                </button>
+                                <Button clickHandler={clickHandler}
+                                    text="Ready to Bang the Gavel?" />
                             }
                         </div>
                     </div>

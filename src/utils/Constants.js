@@ -17,4 +17,6 @@ module.exports = {
     SOCKET_SEND_OPTIONS_TO_PLAYERS: 'send_options_for_vote',
     SOCKET_SEND_ROUND_SELECTION: 'send_round_selection',
     SOCKET_SEND_WINNER_INFO: 'send_winner_info',
+    SOCKET_SEND_START_ROUND_OPTION: 'send_option_to_judge_to_be_able_start_round',
+    SOCKET_RECEIVED_JUDGE_NEW_ROUND_START: 'receive_command_to_start_new_round_from_judge',
 }

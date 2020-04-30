@@ -1,0 +1,19 @@
+button.main-button {
+    width: 80%;
+    /* accounts for padidng on the inputs */
+    height: calc(48px + 16px);
+    background: rgb(59, 199, 218);
+    color: black;
+    font-size: 6vw;
+    display: block;
+    margin: auto;
+    margin-top: 1vh;
+}
+
+@media screen and (orientation: landscape) {
+    button.main-button {
+        width: 60%;
+        font-size: 32px;
+        height: calc(40px + 16px);
+    }
+}
