@@ -1,0 +1,11 @@
+.winner-view {
+    width: 90vw;
+    height: 90vh;
+    padding: 5vh 5vw;
+    font-size: 6vw;
+}
+
+.winner-view .button-div {
+    width: 100%;
+    padding-top: 20%;
+}

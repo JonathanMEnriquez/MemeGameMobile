@@ -29,16 +29,6 @@
     text-align: center;
 }
 
-.initial .sign-up button {
-    width: 80%;
-    /* accounts for padidng on the inputs */
-    height: calc(48px + 16px);
-    background: rgb(59, 199, 218);
-    color: black;
-    font-size: 40px;
-    margin-top: 1vh;
-}
-
 .initial .message {
     font-size: 24px;
     color: rgb(255, 255, 255);
@@ -55,12 +45,6 @@
     .initial .sign-up input {
         width: calc(60% - 16px);
         height: 40px;
-    }
-
-    .initial .sign-up button {
-        width: 60%;
-        font-size: 32px;
-        height: calc(40px + 16px);
     }
 
     .initial .message {

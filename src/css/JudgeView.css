@@ -1,0 +1,47 @@
+.judge-view {
+    width: 100vw;
+    height: 100vh;
+    color: white;
+}
+
+.judge-view .main-message {
+    height: 25%;
+    width: 100%;
+    font-size: 7vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.judge-view .judge-gif {
+    width: 100%;
+    height: 30%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+}
+
+.judge-view .sub-message {
+    width: 94%;
+    height: 20%;
+    font-size: 5vw;
+    text-align: center;
+    color: rgb(221, 221, 221);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2%;
+}
+
+.judge-view .button-div {
+    width: 100%;
+    height: 20%;
+}
+
+.judge-view .message {
+    font-size: 5vw;
+    padding: 4vh 2vw;
+    text-align: center;
+}

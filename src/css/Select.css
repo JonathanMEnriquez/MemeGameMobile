@@ -1,0 +1,47 @@
+.select {
+    width: 100vw;
+    height: 100vh;
+}
+
+.select .select-header {
+    height: 15%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.select .choices {
+    width: 94%;
+    margin: auto;
+    font-size: 6vw;
+}
+
+.select .choices .option {
+    width: 100%;
+    padding: 3vh 0;
+    border: none;
+    text-align: center;
+    margin-bottom: 2vh;
+    border: 2px solid black;
+}
+
+.select .choices .selected {
+    border: 2px solid rgb(34, 165, 34);
+    border-radius: 4vw;
+}
+
+.select .submit-div {
+    width: 100%;
+    padding-top: 4vh;
+}
+
+.select .submit-div button {
+    padding: 2vh 12vw;
+    font-size: 5vw;
+    border-radius: 4vw;
+    text-transform: uppercase;
+    display: block;
+    margin: auto;
+    border: 2px solid rgb(34, 165, 34);
+}

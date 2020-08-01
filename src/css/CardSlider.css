@@ -1,0 +1,34 @@
+.card-slider {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.card-slider .back-section,
+.card-slider .next-section {
+    width: 8%;
+    height: 100%;
+    background-color: rgb(231, 231, 231);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-slider .back-section img,
+.card-slider .next-section img {
+    width: 80%;
+    background-color: rgb(231, 231, 231);
+}
+
+.card-slider .selected-card {
+    width: 84%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+}
+
