@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import InitialView from './InitialView';
 import SocketConnection from './Socket';
 import Constants from '../utils/Constants';
@@ -7,132 +7,156 @@ import PlayerView from './PlayerView';
 import Select from './Select';
 import WinnerView from './WinnerView';
 
-const GameSwitch = (props) => {
-    const gameModes = {
-        initial: 'in',
-        judge: 'ju',
-        player: 'pl',
-        select: 'se',
-        winner: 'wi',
+const gameModes = {
+    initial: 'in',
+    judge: 'ju',
+    player: 'pl',
+    select: 'se',
+    winner: 'wi',
+}
+
+class GameSwitch extends Component {
+    state = { 
+        gameModes: {
+            initial: 'in',
+            judge: 'ju',
+            player: 'pl',
+            select: 'se',
+            winner: 'wi',
+        },
+        mode: gameModes.initial,
+        socketId: null,
+        socket: null,
+        socketMethods: {},
+        hand: [],
+        round: null,
+        playerSelf: null,
+        judgeReady: false,
+        isJudge: false,
+        choices: [],
+        winners: [],
+        isNextRoundJudge: false,
     }
-    const [mode, setMode] = useState();
-    const [socket, setSocket] = useState();
-    const [hand, setHand] = useState([]);
-    const [round, setRound] = useState();
-    const [playerSelf, setSelf] = useState();
-    const [judgeReady, setJudgeReady] = useState(false);
-    const [isJudge, setIsJudge] = useState();
-    const [choices, setChoices] = useState();
-    const [winners, setWinners] = useState();
-    const [isNextRoundJudge, setIsNextRoundJudge] = useState(false);
-    const socketCallbacks = {};
-    socketCallbacks[Constants.SOCKET_SEND_ID] = () => setMode(gameModes.initial);
-    socketCallbacks[Constants.SOCKET_SEND_HAND] = (cards) => receiveNewHand(cards);
-    socketCallbacks[Constants.SOCKET_START_ROUND_AS_JUDGE] = (round) => startRound(true, round);
-    socketCallbacks[Constants.SOCKET_START_ROUND_AS_PLAYER] = (round) => startRound(false, round);
-    socketCallbacks[Constants.SOCKET_SEND_CARD] = (card) => addCardToHand(card, hand);
-    socketCallbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE] = () => receivedJudgePromptToContinue();
-    socketCallbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS] = (choices) => startSelection(choices);
-    socketCallbacks[Constants.SOCKET_SEND_WINNER_INFO] = (winnerInfo) => setWinnerInfo(winnerInfo);
-    socketCallbacks[Constants.SOCKET_SEND_START_ROUND_OPTION] = () => showJudgeOptionStartRound();
 
-    const setWinnerInfo = (winners) => {
-        setWinners(winners);
-    };
+    componentWillMount(props) {
+        this.setState({mode: this.state.gameModes.initial});
+        const socketCallbacks = {};
+        socketCallbacks[Constants.SOCKET_SEND_ID] = () => this.setState({ mode: this.state.gameModes.initial });
+        socketCallbacks[Constants.SOCKET_SEND_HAND] = (cards) => this.receiveNewHand(cards);
+        socketCallbacks[Constants.SOCKET_START_ROUND_AS_JUDGE] = (round) => this.startRound(true, round);
+        socketCallbacks[Constants.SOCKET_START_ROUND_AS_PLAYER] = (round) => this.startRound(false, round);
+        socketCallbacks[Constants.SOCKET_SEND_CARD] = (card) => this.addCardToHand(card);
+        socketCallbacks[Constants.SOCKET_SEND_JUDGE_CAN_CONTINUE] = this.receivedJudgePromptToContinue.bind(this);
+        socketCallbacks[Constants.SOCKET_SEND_OPTIONS_TO_PLAYERS] = (choices) => this.startSelection(choices);
+        socketCallbacks[Constants.SOCKET_SEND_WINNER_INFO] = (winnerInfo) => this.setWinnerInfo(winnerInfo);
+        socketCallbacks[Constants.SOCKET_SEND_START_ROUND_OPTION] = () => this.showJudgeOptionStartRound.bind(this);
 
-    useEffect(() => console.log('handy ', hand), [hand]);
+        this.setState({ 
+            socketMethods: socketCallbacks,
+            socket: new SocketConnection(this.props.socket, socketCallbacks)
+        });
+    }
 
-    const receiveNewHand = (cards) => {
-        console.log('receiving hand? ', cards);
-        if (!hand.length) {
-            setHand(cards);
+    setWinnerInfo(winners) {
+        this.setState({ winners: winners });
+    }
+
+    receiveNewHand(cards) {
+        if (!this.state.hand.length) {
+            this.setState({ hand: cards });
         }
-    };
+    }
 
-    const showJudgeOptionStartRound = () => {
-        // checks if player is judge this round because if so, he would not be the next round's judge
-        if (!isJudge) {
-            // give a view a button to continue
-            setIsNextRoundJudge(true);
+    showJudgeOptionStartRound() {
+        console.debug('showjudgeoptionstartround called');
+        if (!this.state.isJudge) {
+            this.setState({ isNextRoundJudge: true });
         }
-    };
+    }
 
-    const startRound = (isJudge, round) => {
-        console.log(hand);
-        setIsJudge(isJudge);
-        setIsNextRoundJudge(false);
-        setJudgeReady(false);
-        setRound(round);
-        setMode(isJudge ? gameModes.judge : gameModes.player);
-    };
+    startRound(isJudge, round) {
+        const { gameModes } = this.state;
+        this.setState({ 
+            isJudge: isJudge,
+            round: round,
+            judgeReady: false,
+            isNextRoundJudge: false,
+            mode: isJudge ? gameModes.judge : gameModes.player 
+        });
+    }
 
-    const startSelection = (choices) => {
-        setChoices(choices);
-        setMode(gameModes.select);
-    };
+    startSelection(choices) {
+        const { gameModes } = this.state;
+        this.setState({ 
+            choices: choices,
+            mode: gameModes.select 
+        });
+    }
 
-    const removeCardFromHand = (cardId) => {
-        console.log('removing card with ', cardId);
-        console.log(hand.filter(card => card.id !== cardId));
+    removeCardFromHand(cardId) {
+        const { hand } = this.state;
         const filtered = hand.filter(card => card.id !== cardId);
-        setHand(filtered);
-    };
+        this.setState({ hand: filtered });
+    }
 
-    const receivedJudgePromptToContinue = () => {
-        setJudgeReady(true);
-    };
+    receivedJudgePromptToContinue() {
+        this.setState({ judgeReady: true });
+    }
 
-    const addCardToHand = (card, myHand) => {
-        console.log('what? ', hand, myHand);
-        const dupe = [...hand];
-        dupe.push(card);
-        console.log('adding ', dupe);
-        // setHand(dupe);
-    };
+    addCardToHand(card) {
+        const { hand } = this.state;
+        const dupe = [...hand, card];
+        this.setState({ hand: dupe });
+    }
 
-    const judgeReadyToProceed = () => {
-        socket.confirmReadyToJudge(playerSelf.name);
-    };
+    judgeReadyToProceed() {
+        this.state.socket.confirmReadyToJudge(this.state.playerSelf.name);
+    }
 
-    const startNextRound = () => {
-        socket.startNextRoundSignal(playerSelf.name);
-    };
+    startNextRound() {
+        this.state.socket.startNextRoundSignal(this.state.playerSelf.name);
+    }
 
-    const submitRoundSelection = (choice) => {
-        console.log('Gameswitch SubmitRoundSelection method called with data: ' + choice);
-        socket.submitRoundSelection(choice, isJudge, playerSelf.name, round);
-    };
+    submitRoundSelection(choice) {
+        console.debug('Gameswitch SubmitRoundSelection method called with data: ' + choice);
+        this.state.socket.submitRoundSelection(
+            choice, 
+            this.state.isJudge, 
+            this.state.playerSelf.name, 
+            this.state.round);
+    }
 
-    useEffect(() => setSocket(new SocketConnection(socketCallbacks)), []);
-
-    const renderContent = () => {
+    renderContent() {
+        const { mode, socket, socketId, judgeReady, playerSelf,
+                hand, round, isJudge, choices, winners, isNextRoundJudge } = this.state;
         switch(mode) {
             case gameModes.initial:
                 return <InitialView socket={socket}
-                        setGameMode={setMode}
+                        socketId={socketId}
+                        setGameMode={(newMode) => this.setState({ mode: newMode })}
                         gameModes={gameModes}
-                        setSelf={setSelf} />
+                        setSelf={(selfInfo) => this.setState({ playerSelf: selfInfo })} />
             case gameModes.judge:
                 return <JudgeView showButton={judgeReady}
-                        confirm={judgeReadyToProceed} />
+                        confirm={this.judgeReadyToProceed.bind(this)} />
             case gameModes.player:
                 return <PlayerView hand={hand} 
                         playerSelf={playerSelf} 
                         round={round}
                         socket={socket}
-                        removeCardFromHand={removeCardFromHand} />
+                        removeCardFromHand={(card) => this.removeCardFromHand(card)} />
             case gameModes.select:
                 return <Select isJudge={isJudge} 
                         choices={choices}
                         playerSelf={playerSelf}
-                        submitRoundSelection={submitRoundSelection}
-                        switchToWinnerMode={() => setMode(gameModes.winner)} />
+                        submitRoundSelection={(selection) => this.submitRoundSelection(selection)}
+                        switchToWinnerMode={() => this.setState({ mode: gameModes.winner })} />
             case gameModes.winner:
                 return <WinnerView winners={winners}
                         isJudge={isJudge}
                         playerSelf={playerSelf}
                         displayNewRoundButton={isNextRoundJudge}
-                        startNextRound={startNextRound} />
+                        startNextRound={this.startNextRound.bind(this)} />
             default:
                 return (
                     <div style={{width: '100vw', height: '100vh', display: 'flex', 
@@ -143,7 +167,7 @@ const GameSwitch = (props) => {
         }
     }
 
-    return renderContent();
+    render() { return this.renderContent() }
 }
-
+ 
 export default GameSwitch;

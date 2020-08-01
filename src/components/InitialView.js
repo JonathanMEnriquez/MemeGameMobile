@@ -6,7 +6,7 @@ import Player from '../classes/Player';
 import Button from '../reusable/Button';
 
 const InitialView = (props) => {
-    const { socket, setSelf } = props;
+    const { socket, setSelf, socketId } = props;
     const [message, setMessage] = useState();
     const [messageHasError, setMessageHasError] = useState(false);
     const [signedUp, setSignedUp] = useState(false);
@@ -22,7 +22,7 @@ const InitialView = (props) => {
         setSubmitting(true);
         setMessage("Connecting...");
         try {
-            const res = await socket.addSelfToGame(code, name);
+            const res = await socket.addSelfToGame(code, name, socketId);
             setSignedUp(true);
             setMessage('Connected. \nWaiting for other players.');
             setSelf(new Player(res.id, res.name));

@@ -2,11 +2,53 @@ import Constants from '../utils/Constants';
 import OpenSocket from 'socket.io-client';
 // const OpenSocket = window.require('socket.io-client');
 
-function SocketConnection(methods) {
+// class SocketMethods {
+//     constructor(socket) {
+//         this.socket = socket;
+//     }
+
+//     addSelfToGame(code, name, id) {
+//         return new Promise((resolve, reject) => {
+//             this.socket.emit(Constants.SOCKET_ADD_PLAYER, 
+//                 {code: code, name: name}
+//             );
+//             this.socket.on(Constants.SOCKET_ADD_PLAYER_ERROR, (data) => {
+//                 console.error(data);
+//                 reject(data.error);
+//             });
+//             this.socket.on(Constants.SOCKET_CONFIRM_PLAYER_ADDED, () => {
+//                 console.debug('Player added to game ', this);
+//                 resolve({id: id, name: name, socket: this.socket});
+//             });
+//         });
+//     };
+
+//     submitRoundSelection = (choice, isJudge, name, round) => {
+//         console.debug(`Socket emitting ${Constants.SOCKET_SEND_ROUND_SELECTION} from ${name} selecting option-${choice} during round ${round}`);
+//         this.socket.emit(Constants.SOCKET_SEND_ROUND_SELECTION, {isJudge: isJudge, name: name, choice: choice, round: round});
+//     }
+
+//     submitChoice(name, cardId, round) {
+//         console.debug(`Socket emitting ${Constants.SOCKET_SEND_ROUND_SUBMISSION} from ${name} about ${cardId} during round ${round}`);
+//         this.socket.emit(Constants.SOCKET_SEND_ROUND_SUBMISSION, {name: name, id: cardId, round: round});
+//     }
+
+//     confirmReadyToJudge(name) {
+//         console.debug(`Socket emitting ${Constants.SOCKET_RECEIVE_JUDGE_PERMISSION_TO_CONTINUE} with name: ${name}`);
+//         this.socket.emit(Constants.SOCKET_RECEIVE_JUDGE_PERMISSION_TO_CONTINUE, { name: name });
+//     }
+
+//     startNextRoundSignal(name) {
+//         console.debug(`Socket emitting ${Constants.SOCKET_RECEIVED_JUDGE_NEW_ROUND_START} with name ${name}`);
+//         this.socket.emit(Constants.SOCKET_RECEIVED_JUDGE_NEW_ROUND_START, { name: name });
+//     }
+// }
+
+function SocketConnection(socket, methods) {
     let self = this;
     self.id = '';
     self.callbacks = methods;
-    self.socket = OpenSocket('http://localhost:6969');
+    self.socket = socket;
 
     self.socket.emit(Constants.SOCKET_NEW_CONNECTION);
     self.socket.on(Constants.SOCKET_SEND_ID, function(data) {
@@ -22,19 +64,16 @@ function SocketConnection(methods) {
         self.socket.emit(Constants.SOCKET_SEND_HAND_CONFIRM);
     });
     self.socket.on(Constants.SOCKET_START_ROUND_AS_JUDGE, (data) => {
-        console.log('woooooo! I\'m the judge! ', data);
         if (self.callbacks[Constants.SOCKET_START_ROUND_AS_JUDGE]) {
             self.callbacks[Constants.SOCKET_START_ROUND_AS_JUDGE](data.round);
         }
     });
     self.socket.on(Constants.SOCKET_START_ROUND_AS_PLAYER, (data) => {
-        console.log('woooooo! I\'m a player next round! ', data);
         if (self.callbacks[Constants.SOCKET_START_ROUND_AS_PLAYER]) {
             self.callbacks[Constants.SOCKET_START_ROUND_AS_PLAYER](data.round);
         }
     });
     self.socket.on(Constants.SOCKET_SEND_CARD, (data) => {
-        console.log('woooo! got a card! ', data);
         if (self.callbacks[Constants.SOCKET_SEND_CARD]) {
             self.callbacks[Constants.SOCKET_SEND_CARD](data.card);
         }
